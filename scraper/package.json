@@ -8,7 +8,9 @@
   },
   "scripts": {
     "compile": "tsc && babel src --out-dir dist --extensions .ts",
-    "dev": "tsc && babel src --out-dir dist --extensions .ts && node ./dist/app.js"
+    "dev": "tsc && babel src --out-dir dist --extensions .ts && node ./dist/app.js",
+    "lint": "eslint . --ext .ts",
+    "clean": "rimraf ./dist"
   },
   "author": "Oleh Andrushko",
   "license": "MIT",
@@ -28,8 +30,16 @@
     "@types/node": "^16.11.2",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
+    "dotenv": "^10.0.0",
     "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "link-parent-bin": "^2.0.0",
+    "prettier": "^2.4.1",
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "axios": "^0.23.0",
+    "cheerio": "^1.0.0-rc.10"
   }
 }
