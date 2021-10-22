@@ -1,0 +1,35 @@
+{
+  "name": "meme-scraper",
+  "version": "1.0.0",
+  "description": "Web scraping tool for all memes of the world",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "compile": "tsc && babel src --out-dir dist --extensions .ts",
+    "dev": "tsc && babel src --out-dir dist --extensions .ts && node ./dist/app.js"
+  },
+  "author": "Oleh Andrushko",
+  "license": "MIT",
+  "keywords": [
+    "meme",
+    "scapper"
+  ],
+  "bugs": {
+    "url": "https://github.com/olich97/mementor/issues"
+  },
+  "homepage": "https://github.com/olich97/mementor/scraper#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/node": "^16.11.2",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^8.0.1",
+    "link-parent-bin": "^2.0.0",
+    "typescript": "^4.4.4"
+  }
+}
