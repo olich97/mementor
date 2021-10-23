@@ -1,20 +1,29 @@
-export class Meme {
-    private _text: string;
-    private _contentUrl: string;
-    private _updateDate: Date;
+export enum ContentType {
+    gif = 'image/gif',
+    mp4 = 'video/mp4',
+    webm = 'video/webm'
+}
 
-    private constructor(text: string, contentUrl: string) {
-        this._text = text;
-        this._contentUrl = contentUrl;
-    }
+interface Content {
+    url: string;
+    type: ContentType;
+}
 
-    public static Create(text: string, contentUrl: string): Meme {
-        return new Meme(text, contentUrl);
-    }
-
-    public Update(text: string, contentUrl: string): void {
-        this._text = text;
-        this._contentUrl = contentUrl;
-        this._updateDate = new Date();
-    }
+export interface Meme {
+    /**
+     * The meme main text or title
+     */
+    text: string;
+    /**
+     * Content associated to the meme (gif, mp4 ecc..)
+     */
+    content: Content;
+    /**
+     * Source main location url of the meme post
+     */
+    sourceUrl: string;
+    /**
+     * Some additional data for the meme
+     */
+    metaData: string;
 }
