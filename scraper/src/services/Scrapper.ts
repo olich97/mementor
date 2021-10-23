@@ -34,7 +34,7 @@ export class Scraper implements IScraper {
             const memes: Meme[] = [];
 
             elements.each((index, me) => {
-                const text = $(me).find(this._config.textPattern).text();
+                const text = $(me).find(this._config.textPattern).text().trim();
                 const content = $(me).find(this._config.contentPattern);
                 const contentUrl = content.attr(this._config.contentPatternAttribute);
                 const contentType = mime.lookup(contentUrl);
