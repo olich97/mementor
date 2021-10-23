@@ -8,7 +8,7 @@
   },
   "scripts": {
     "compile": "tsc && babel src --out-dir dist --extensions .ts",
-    "dev": "tsc && babel src --out-dir dist --extensions .ts && node ./dist/app.js",
+    "dev": "tsc && babel src --out-dir dist --extensions .ts && node --require dotenv/config ./dist/app.js",
     "lint": "eslint . --ext .ts",
     "clean": "rimraf ./dist"
   },
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "axios": "^0.23.0",
-    "cheerio": "^1.0.0-rc.10"
+    "cheerio": "^1.0.0-rc.10",
+    "mime-types": "^2.1.33"
   }
 }
