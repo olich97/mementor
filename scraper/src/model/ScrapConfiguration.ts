@@ -1,15 +1,4 @@
-export abstract class ScrapConfiguration {
-    /**
-     * Complete target url for scrap from
-     */
-    private _targetUrl: string;
-    public get targetUrl(): string {
-        return this._targetUrl;
-    }
-    public set targetUrl(value: string) {
-        this._targetUrl = value;
-    }
-
+export class ScrapConfiguration {
     /**
      * Main html target element
      */
@@ -54,13 +43,11 @@ export abstract class ScrapConfiguration {
     }
 
     public constructor(
-        targetUrl: string,
         targetElementPattern: string,
         textPattern: string,
         contentPattern: string,
         contentPatternAttribute: string
     ) {
-        this._targetUrl = targetUrl;
         this._targetElementPattern = targetElementPattern;
         this._textPattern = textPattern;
         this._contentPattern = contentPattern;
