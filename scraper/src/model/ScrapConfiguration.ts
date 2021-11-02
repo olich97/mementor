@@ -22,6 +22,17 @@ export class ScrapConfiguration {
     }
 
     /**
+     * The pattern to use in order to find meme url
+     */
+    private _sourceUrlPattern: string;
+    public get sourceUrlPattern(): string {
+        return this._sourceUrlPattern;
+    }
+    public set sourceUrlPattern(value: string) {
+        this._sourceUrlPattern = value;
+    }
+
+    /**
      * The pattern to use in order to find meme content
      */
     private _contentPattern: string;
@@ -45,11 +56,13 @@ export class ScrapConfiguration {
     public constructor(
         targetElementPattern: string,
         textPattern: string,
+        sourceUrlPattern: string,
         contentPattern: string,
         contentPatternAttribute: string
     ) {
         this._targetElementPattern = targetElementPattern;
         this._textPattern = textPattern;
+        this._sourceUrlPattern = sourceUrlPattern;
         this._contentPattern = contentPattern;
         this._contentPatternAttribute = contentPatternAttribute;
     }
