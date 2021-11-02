@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
       /* Visit https://aka.ms/tsconfig.json to read more about this file */
       "target": "esnext",
-      "lib": ["esnext"],
+      "lib": ["esnext", "es6"],
       "module": "esnext",
       "outDir": "./dist",
       "noEmit": true,
