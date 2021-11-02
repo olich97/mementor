@@ -3,8 +3,6 @@ import { HttpRequestHelper } from '../utils/HttpRequestHelper';
 import cheerio from 'cheerio';
 import mime from 'mime-types';
 import { ScrapConfiguration } from '../model/ScrapConfiguration';
-import { Content } from '../model/Content';
-import { attr } from 'cheerio/lib/api/attributes';
 
 export interface IScraper {
     scrap(targetUrl: string): Promise<Meme[]>;
