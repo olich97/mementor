@@ -32,11 +32,11 @@ const scraper: IScraper = new Scraper(scrapConfig);
         const url: string = process.env.SCRAP_TARGET + '/' + pageNumber;
         try {
             console.log(`Scrapping url: ${url}`);
-            const result: Meme[] = await scraper.scrap(url);
+            const memes: Meme[] = await scraper.scrap(url);
             console.log('Result: ');
-            console.log(result);
+            console.log(memes);
             console.log('------------------');
-            memeRepository.save(result);
+            memeRepository.save(memes);
         } catch (error) {
             errorRepository.save(ScrapError.Create(url, <string>error));
         }
