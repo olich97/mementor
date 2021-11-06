@@ -15,6 +15,18 @@ export class Meme {
     @Column({ type: 'text' })
     text: string;
 
+    @Column({ type: 'varchar', length: 255 })
+    author: string;
+
+    @Column({ type: 'bit', name: 'is_public' })
+    isPublic: boolean;
+
+    @Column({ type: 'timestamp', name: 'publish_date' })
+    publishDate?: Date;
+
+    @Column({ type: 'int', name: 'likes_count' })
+    likes: number;
+
     @OneToOne(() => Content, { cascade: true })
     @JoinColumn({ name: 'content_id' })
     content: Content;
@@ -26,12 +38,13 @@ export class Meme {
         memeText: string,
         memeSourceUrl: string,
         memeContentType: ContentType,
-        contentSourceUrl: string
+        contentSourceUrl: string,
+        contentHash: string
     ): Meme {
         const memeContent: Content = new Content();
         memeContent.type = memeContentType;
         memeContent.sourceUrl = contentSourceUrl;
-        memeContent.storageKey = 'hash';
+        memeContent.hash = contentHash;
 
         const meme = new Meme();
         meme.text = memeText;
