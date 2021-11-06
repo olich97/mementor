@@ -3,7 +3,7 @@ import { HttpRequestHelper } from '../utils/HttpRequestHelper';
 import cheerio from 'cheerio';
 import mime from 'mime-types';
 import { ScrapConfiguration } from '../model/ScrapConfiguration';
-
+import crypto from 'crypto';
 export interface IScraper {
     scrap(targetUrl: string): Promise<Meme[]>;
 }
@@ -32,7 +32,10 @@ export class Scraper implements IScraper {
 
         const memes: Meme[] = [];
 
-        elements.each((index, me) => {
+        const elementsArray = elements.toArray();
+
+        for (let i = 0; i < elementsArray.length; i++) {
+            const me = elementsArray[i];
             const text = $(me).find(this._config.textPattern).text().trim();
             const sourceUrl = $(me).find(this._config.sourceUrlPattern).attr('href').trim();
             const content = $(me).find(this._config.contentPattern);
@@ -52,11 +55,16 @@ export class Scraper implements IScraper {
                 );
                 return;
             }
+            // get hash of content file
+            const fileBuffer = await HttpRequestHelper.getBufferFromUrl(sourceUrl);
+            const hashSum = crypto.createHash('sha256');
+            hashSum.update(fileBuffer);
+            const contentHash = hashSum.digest('hex');
 
-            const meme = Meme.Create(text, sourceUrl, contentType, contentUrl);
+            const meme = Meme.Create(text, sourceUrl, contentType, contentUrl, contentHash);
 
             memes.push(meme);
-        });
+        }
 
         return memes;
     }

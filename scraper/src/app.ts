@@ -28,7 +28,7 @@ const scraper: IScraper = new Scraper(scrapConfig);
     const memeRepository = connection.getRepository(Meme);
     //const result: Meme[] = await scraper.scrap(process.env.SCRAP_TARGET);
 
-    for (let pageNumber = 0; pageNumber < 1; pageNumber++) {
+    for (let pageNumber = 1; pageNumber < 2; pageNumber++) {
         const url: string = process.env.SCRAP_TARGET + '/' + pageNumber;
         try {
             console.log(`Scrapping url: ${url}`);
