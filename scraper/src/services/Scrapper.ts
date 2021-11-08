@@ -35,35 +35,39 @@ export class Scraper implements IScraper {
         const elementsArray = elements.toArray();
 
         for (let i = 0; i < elementsArray.length; i++) {
-            const me = elementsArray[i];
-            const text = $(me).find(this._config.textPattern).text().trim();
-            const sourceUrl = $(me).find(this._config.sourceUrlPattern).attr('href').trim();
-            const content = $(me).find(this._config.contentPattern);
-            const contentUrl = content.attr(this._config.contentPatternAttribute);
-            const contentType = mime.lookup(contentUrl);
+            try {
+                const me = elementsArray[i];
+                const text = $(me).find(this._config.textPattern).text().trim();
+                const sourceUrl = $(me).find(this._config.sourceUrlPattern).attr('href').trim();
+                const content = $(me).find(this._config.contentPattern);
+                const contentUrl = content.attr(this._config.contentPatternAttribute);
+                const contentType = mime.lookup(contentUrl);
 
-            if (!text || text == '') {
-                console.error(
-                    `Enable to find text with pattern ${this._config.textPattern} inside element with pattern ${this._config.targetElementPattern}`
-                );
-                return;
+                if (!text || text == '') {
+                    console.error(
+                        `Enable to find text with pattern ${this._config.textPattern} inside element with pattern ${this._config.targetElementPattern}`
+                    );
+                    return;
+                }
+
+                if (!contentUrl || contentUrl == '') {
+                    console.error(
+                        `Enable to find content with pattern ${this._config.contentPattern} and attribute ${this._config.contentPatternAttribute} inside element with pattern ${this._config.targetElementPattern}`
+                    );
+                    return;
+                }
+                // get hash of content file
+                console.log('Start creating content hash: ', sourceUrl);
+                const fileBuffer = await HttpRequestHelper.getBufferFromUrl(sourceUrl);
+                const hashSum = crypto.createHash('sha256');
+                hashSum.update(fileBuffer);
+                const contentHash = hashSum.digest('hex');
+                const meme = Meme.Create(text, sourceUrl, contentType, contentUrl, contentHash);
+
+                memes.push(meme);
+            } catch (error) {
+                console.warn(`Problem with processing element at position: ${i}`, error);
             }
-
-            if (!contentUrl || contentUrl == '') {
-                console.error(
-                    `Enable to find content with pattern ${this._config.contentPattern} and attribute ${this._config.contentPatternAttribute} inside element with pattern ${this._config.targetElementPattern}`
-                );
-                return;
-            }
-            // get hash of content file
-            const fileBuffer = await HttpRequestHelper.getBufferFromUrl(sourceUrl);
-            const hashSum = crypto.createHash('sha256');
-            hashSum.update(fileBuffer);
-            const contentHash = hashSum.digest('hex');
-
-            const meme = Meme.Create(text, sourceUrl, contentType, contentUrl, contentHash);
-
-            memes.push(meme);
         }
 
         return memes;
