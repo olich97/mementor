@@ -57,7 +57,6 @@ export class Scraper implements IScraper {
                     return;
                 }
                 // get hash of content file
-                console.log('Start creating content hash: ', sourceUrl);
                 const fileBuffer = await HttpRequestHelper.getBufferFromUrl(sourceUrl);
                 const hashSum = crypto.createHash('sha256');
                 hashSum.update(fileBuffer);

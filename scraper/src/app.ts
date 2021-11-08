@@ -6,6 +6,8 @@ import { IScraper, Scraper } from './services/Scrapper';
 import { createConnection, Repository } from 'typeorm';
 import { ScrapError } from './model/ScrapError';
 import { ISkynetService, SkynetService } from './services/SkynetService';
+import { Content } from './model/Content';
+import { UploadError } from './model/UploadError';
 
 const scrapConfig: ScrapConfiguration = new ScrapConfiguration(
     process.env.SCRAP_TARGET_ELEMENT_PATTERN,
@@ -24,6 +26,8 @@ const skynet: ISkynetService = new SkynetService(
 
 let errorRepository: Repository<ScrapError>;
 let memeRepository: Repository<Meme>;
+let contentRepository: Repository<Content>;
+let uploadErrorRepository: Repository<UploadError>;
 
 async function inizializeDatabase() {
     const connection = await createConnection({
@@ -33,6 +37,8 @@ async function inizializeDatabase() {
     });
     errorRepository = connection.getRepository(ScrapError);
     memeRepository = connection.getRepository(Meme);
+    contentRepository = connection.getRepository(Content);
+    uploadErrorRepository = connection.getRepository(UploadError);
 }
 
 async function elaboratePage(url: string) {
@@ -59,43 +65,66 @@ async function elaboratePage(url: string) {
                 if (existingMemeContent) {
                     // just map map content to new meme
                     newMeme.content = existingMemeContent.content;
-                } else {
-                    // need to be uploaded to external storage
-                    const fileName = newMeme.content.sourceUrl.substring(
-                        newMeme.content.sourceUrl.lastIndexOf('/') + 1
-                    );
-                    const skyKey = await skynet.uploadFile(newMeme.content.sourceUrl, fileName);
-                    console.log(`Upload successful, skylink: ${skyKey}`);
-                    newMeme.content.storageKey = skyKey;
                 }
                 memeRepository.save(newMeme);
                 console.log('Saved: ', newMeme);
             }
         }
     } catch (error) {
-        console.error(error);
         errorRepository.save(ScrapError.Create(url, <string>error));
+        console.error(error);
     }
+}
+
+async function uploadFiles() {
+    const startUpload = performance.now();
+
+    const contentsToUpload = await contentRepository.find({ storageKey: null });
+
+    for (let i = 0; i < contentsToUpload.length; i++) {
+        const content = contentsToUpload[i];
+        try {
+            console.log(`Start uploading content: ${content.sourceUrl}`);
+            const fileName = content.sourceUrl.substring(content.sourceUrl.lastIndexOf('/') + 1);
+            const skyKey = await skynet.uploadFile(content.sourceUrl, fileName);
+            console.log(`Upload successful, skylink: ${skyKey}`);
+            content.storageKey = skyKey;
+            contentRepository.save(content);
+        } catch (error) {
+            uploadErrorRepository.save(UploadError.Create(content.sourceUrl, <string>error));
+            console.error(error);
+        }
+    }
+
+    const endUpload = performance.now();
+    const diff = endUpload - startUpload;
+    console.log(
+        `Upload files ${contentsToUpload.length} execution time: ${diff} ms (${diff / 1000} s)`
+    );
 }
 
 async function elaborateMultiplePages(start: number, end: number) {
     console.log(`Start scrapping data from page ${start} to page ${end}`);
+    const startScrap = performance.now();
     for (let currentPage = start; currentPage < end; currentPage++) {
         const url: string = process.env.SCRAP_TARGET + '/' + currentPage;
         await elaboratePage(url);
     }
+    const endScrap = performance.now();
+    const diff = endScrap - startScrap;
+    console.log(`Scrap pages (${end - start}) execution time: ${diff} ms (${diff / 1000} s)`);
 }
 
 (async () => {
-    const start = performance.now();
     // create database connection
     await inizializeDatabase();
 
+    // Scraping pages
     await elaborateMultiplePages(
         parseInt(process.env.SCRAP_START_PAGE),
         parseInt(process.env.SCRAP_END_PAGE)
     );
 
-    const end = performance.now();
-    console.log(`Execution time: ${end - start} ms (${(end - start) / 1000} s)`);
+    // Uploading files
+    await uploadFiles();
 })();
