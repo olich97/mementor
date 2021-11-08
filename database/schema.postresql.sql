@@ -37,4 +37,14 @@ CREATE TABLE scrap_error
     last_update_date TIMESTAMP with time zone default current_timestamp NOT NULL
 );
 
+-- Table for tracing the content upload execution errors
+CREATE TABLE content_upload_error 
+(
+    error_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    target_url TEXT NOT NULL,
+    attempts INT NOT NULL DEFAULT 0,
+    error TEXT NOT NULL,
+    last_update_date TIMESTAMP with time zone default current_timestamp NOT NULL
+);
+
 CREATE INDEX Meme_ContentId_Idx ON Meme(content_id);
