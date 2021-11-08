@@ -14,7 +14,27 @@ export class HttpRequestHelper {
                     });
                 })
                 .on('error', (error) => {
-                    console.error(error);
+                    //console.error(error);
+                    reject(error);
+                });
+        });
+    }
+
+    public static async getBufferFromUrl(url: string): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            https
+                .get(url, (response) => {
+                    const body: Buffer[] = [];
+                    response
+                        .on('data', (chunk: Buffer) => {
+                            body.push(chunk);
+                        })
+                        .on('end', () => {
+                            resolve(Buffer.concat(body));
+                        });
+                })
+                .on('error', (error) => {
+                    //console.error(error);
                     reject(error);
                 });
         });
