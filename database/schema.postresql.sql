@@ -23,6 +23,7 @@ CREATE TABLE meme (
     is_public BIT DEFAULT b'0' NOT NULL,
     publish_date TIMESTAMP NULL,
     likes_count INT default(0),
+    dislikes_count INT default(0),
     content_id uuid NOT NULL references content(content_id),
     last_update_date TIMESTAMP with time zone default current_timestamp NOT NULL
 );
