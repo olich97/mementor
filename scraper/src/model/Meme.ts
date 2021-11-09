@@ -27,6 +27,9 @@ export class Meme {
     @Column({ type: 'int', name: 'likes_count' })
     likes: number;
 
+    @Column({ type: 'int', name: 'dislikes_count' })
+    dislikes: number;
+
     @OneToOne(() => Content, { cascade: true })
     @JoinColumn({ name: 'content_id' })
     content: Content;
