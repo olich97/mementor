@@ -1,0 +1,54 @@
+{
+  "name": "mementor-api",
+  "version": "1.0.0",
+  "description": "Api for mementor platform",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "lint": "npm run lint:js ",
+    "lint:eslint": "eslint --ignore-path .gitignore --ext .ts",
+    "lint:js": "npm run lint:eslint src/",
+    "lint:fix": "npm run lint:js -- --fix",
+    "clean": "rimraf ./dist",
+    "build": "tsc",
+    "serve": "node -r dotenv/config ./dist/main.js",
+    "start": "npm run build && npm run lint:eslint && npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olich97/mementor.git"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "mementor"
+  ],
+  "author": "Oleh Andrushko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olich97/mementor/issues"
+  },
+  "homepage": "https://github.com/olich97/mementor#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "env-var": "^7.1.1",
+    "express": "^4.17.1",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  }
+}
