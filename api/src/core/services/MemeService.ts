@@ -14,8 +14,8 @@ export class MemeService implements IMemeService {
         this._storage = storageService;
     } 
    
-    public async list(limit: number, page: number): Promise<MemeOutput[]> {
-        const memes = await this._memes.query({ skip: (page - 1) * limit, take: limit });
+    public async list(skip: number = 0, limit: number = 0): Promise<MemeOutput[]> {
+        const memes = await this._memes.query({ skip: skip, take: limit });
 
         //TODO: move to some cast method
         return Promise.all(memes.map(async (meme) => ({
