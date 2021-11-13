@@ -19,5 +19,12 @@ export default {
     */
     logging: {
       level: get('LOG_LEVEL').asString() || 'silly',
+    },
+    /**
+    * Database connection options
+    */
+    database: {
+      url: get('DATABASE_URL').required().asString(),
+      mappingsPath: get('DATABASE_MAPPINGS_PATH').asString()
     }
 }
