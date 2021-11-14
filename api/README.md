@@ -1,8 +1,9 @@
-## Mementor Api 
+## Mementor Api
 
 A mementor REST api for exposing the memes to external world.
 
-Example: 
+Example:
+
 - Get random meme
 - Upload new meme
 - Search meme

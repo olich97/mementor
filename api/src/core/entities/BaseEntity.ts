@@ -1,5 +1,4 @@
 export class BaseEntity {
-    id: string;
-    lastUpdateDate: Date;
+  id: string;
+  lastUpdateDate: Date;
 }
-  
