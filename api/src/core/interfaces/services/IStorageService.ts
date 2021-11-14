@@ -1,4 +1,3 @@
-
 export interface IStorageService {
-    getUrl(key: string): Promise<string>;
+  getUrl(key: string): Promise<string>;
 }

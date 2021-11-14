@@ -1,4 +1,4 @@
-import { BaseEntity } from "@/core/entities/BaseEntity";
+import { BaseEntity } from '@/core/entities/BaseEntity';
 
 export interface IRepository<TEntity extends BaseEntity> {
   getAll(): Promise<TEntity[] | undefined>;
