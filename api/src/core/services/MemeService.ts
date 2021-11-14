@@ -15,7 +15,7 @@ export class MemeService implements IMemeService {
   public async list(skip: number = 0, limit: number = 0): Promise<MemeOutput[]> {
     const memes = await this._memes.query({ skip: skip, take: limit });
 
-    //TODO: move to some cast method
+    //TODO: move to some cast method or mapper function
     return Promise.all(
       memes.map(async meme => ({
         id: meme.id,
@@ -38,7 +38,7 @@ export class MemeService implements IMemeService {
       where: { column: 'text', operator: 'like', value: text },
     });
 
-    //TODO: move to some cast method
+    //TODO: move to some cast method or mapper function
     return Promise.all(
       memes.map(async meme => ({
         id: meme.id,
@@ -56,5 +56,6 @@ export class MemeService implements IMemeService {
 
   public async create(resource: CreateMemeInput): Promise<MemeOutput> {
     throw new Error('Method not implemented.');
+    // https://github.dev/cornflourblue/node-mysql-signup-verification-api
   }
 }
