@@ -1,5 +1,6 @@
 import { Meme } from '@/core/entities/Meme';
 import { EntitySchema, EntitySchemaRelationOptions } from 'typeorm';
+import { BoolBitTransformer } from '../BoolBitTransformer';
 
 export const MemeMapping = new EntitySchema<Meme>({
   name: 'Meme',
@@ -21,8 +22,9 @@ export const MemeMapping = new EntitySchema<Meme>({
       name: 'source_url',
     },
     isPublic: {
-      type: Boolean,
+      type: 'bit',
       name: 'is_public',
+      transformer: new BoolBitTransformer(),
     },
     publishDate: {
       type: Date,

@@ -12,6 +12,7 @@ interface DI_TYPES {
   StorageService: symbol;
   DatabaseService: symbol;
   ConnectionOptions: symbol;
+  ApiController: symbol;
 }
 
 const DI_TYPES: DI_TYPES = {
@@ -20,6 +21,7 @@ const DI_TYPES: DI_TYPES = {
   DatabaseService: Symbol('DatabaseService'),
   StorageService: Symbol('StorageService'),
   ConnectionOptions: Symbol('ConnectionOptions'),
+  ApiController: Symbol('ApiController'),
 };
 
 export default DI_TYPES;
