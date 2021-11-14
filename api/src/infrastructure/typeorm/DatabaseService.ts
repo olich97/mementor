@@ -19,7 +19,7 @@ export class DatabaseService {
       Logger.info(`Database connection established`);
       return DatabaseService.connection;
     } catch (e) {
-      Logger.error('Cannot establish database connection');
+      Logger.error(`Cannot establish database connection: ${e.message}`);
       process.exit(1);
     }
   }

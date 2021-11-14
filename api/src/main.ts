@@ -1,51 +1,23 @@
 import 'reflect-metadata'; // We need this in order to use @Decorators
 //import config from './config';
 import express from 'express';
-import { createConnection } from 'typeorm';
-import { MemeService } from './core/services/MemeService';
 import config from './infrastructure/AppSettings';
 import Logger from './infrastructure/Logger';
-import { StorageService } from './infrastructure/StorageService';
-import { MemeRepository } from './infrastructure/typeorm/repositories/MemeRepository';
-import container from './infrastructure/di/DependencyConfiguration';
-import { IMemeService } from './core/interfaces/services/IMemeService';
-import DI_TYPES from './infrastructure/di/DependencyTypes';
+import container from './api/di/DependencyConfiguration';
+import DI_TYPES from './api/di/DependencyTypes';
+import { IBaseController } from './api/controllers/IBaseController';
 
 async function startServer() {
-  // Only for testing
-  Logger.info(config.database.mappingsPath);
-  /*
-  const connection = await createConnection({
-    type: 'postgres',
-    url: config.database.url,
-    entities: [config.database.mappingsPath],
-  }); //`${__dirname}/infrastructure/typeorm/mappings/*`
-
-  const memeRepository = new MemeRepository(connection);
-  const storageService = new StorageService();
-  const memeService = new MemeService(memeRepository, storageService);
-*/
   const app = express();
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
-  app.get('/', async (req, res) => {
-    try {
-      //const result = await memeService.list(5, 100);
-      const skip = req.query.skip || 0;
-      const take = req.query.take || 100;
-      const keyword = req.query.search || '';
-      const memeService = container.get<IMemeService>(DI_TYPES.MemeService);
-      const result = await memeService.searchByText(
-        parseInt(skip.toString()),
-        parseInt(take.toString()),
-        keyword.toString(),
-      );
-      res.send(result.map(item => item.text));
-    } catch (error) {
-      Logger.error(error);
-    }
+  // grabs the Controller from IoC container and registers the endpoints
+  const controllers: IBaseController[] = container.getAll<IBaseController>(DI_TYPES.ApiController);
+  controllers.forEach(controller => {
+    controller.register(app);
+    Logger.info(`Registered: ${controller.constructor.name}`);
   });
 
   app
