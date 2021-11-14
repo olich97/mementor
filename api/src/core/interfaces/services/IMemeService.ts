@@ -1,7 +1,5 @@
 import { CreateMemeInput } from './models/CreateMemeInput';
 import { MemeOutput } from './models/MemeOutput';
-import { UpdateMemeInput } from './models/UpdateMemeInput';
-
 export interface IMemeService {
   list(skip: number, limit: number): Promise<MemeOutput[]>;
   create(input: CreateMemeInput): Promise<MemeOutput>;

@@ -6,23 +6,25 @@ import { MemeService } from './core/services/MemeService';
 import config from './infrastructure/AppSettings';
 import Logger from './infrastructure/Logger';
 import { StorageService } from './infrastructure/StorageService';
-import { ContentMapping } from './infrastructure/typeorm/mappings/ContentMapping';
-import { MemeMapping } from './infrastructure/typeorm/mappings/MemeMapping';
 import { MemeRepository } from './infrastructure/typeorm/repositories/MemeRepository';
+import container from './infrastructure/di/DependencyConfiguration';
+import { IMemeService } from './core/interfaces/services/IMemeService';
+import DI_TYPES from './infrastructure/di/DependencyTypes';
 
 async function startServer() {
   // Only for testing
   Logger.info(config.database.mappingsPath);
+  /*
   const connection = await createConnection({
     type: 'postgres',
     url: config.database.url,
-    entities: [MemeMapping, ContentMapping],
+    entities: [config.database.mappingsPath],
   }); //`${__dirname}/infrastructure/typeorm/mappings/*`
 
   const memeRepository = new MemeRepository(connection);
   const storageService = new StorageService();
   const memeService = new MemeService(memeRepository, storageService);
-
+*/
   const app = express();
 
   app.use(express.urlencoded({ extended: true }));
@@ -34,12 +36,12 @@ async function startServer() {
       const skip = req.query.skip || 0;
       const take = req.query.take || 100;
       const keyword = req.query.search || '';
+      const memeService = container.get<IMemeService>(DI_TYPES.MemeService);
       const result = await memeService.searchByText(
         parseInt(skip.toString()),
         parseInt(take.toString()),
         keyword.toString(),
       );
-      Logger.info(result.length);
       res.send(result.map(item => item.text));
     } catch (error) {
       Logger.error(error);
