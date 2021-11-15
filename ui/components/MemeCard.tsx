@@ -7,7 +7,7 @@ const MemeCard = ({ meme }: { meme?: MemeType }): JSX.Element => {
       <div className="box-border md:box-content">
         <header className=" text-xl font-extrabold py-4">{meme.text}</header>
         <img
-          src={meme.content}
+          src={meme.contentUrl}
           alt={meme.code}
           className="w-full md:w-7/12 lg:w-9/12"
         />

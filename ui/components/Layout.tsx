@@ -31,9 +31,9 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
           Built by{' '}
           <a
             className="text-gray-900 dark:text-white"
-            href="https://github.com/ChangoMan/nextjs-typescript-mdx-blog"
+            href="https://github.com/olich97"
           >
-            Hunter Chang
+            Oleh Andrushko
           </a>
         </div>
       </footer>
