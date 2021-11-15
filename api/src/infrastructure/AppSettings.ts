@@ -24,10 +24,14 @@ export default {
    * Database connection options
    */
   database: {
-    url: get('DATABASE_URL').required().asString(),
+    url: get('DATABASE_URL').required().asUrlString(),
     mappingsPath: get('DATABASE_MAPPINGS_PATH').asString(),
   },
   storage: {
-    url: get('STORAGE_URL').required().asString(),
+    url: get('STORAGE_URL').required().asUrlString(),
+  },
+
+  cors: {
+    origins: get('CORS_ORIGINS').required().asString().split(', '),
   },
 };
