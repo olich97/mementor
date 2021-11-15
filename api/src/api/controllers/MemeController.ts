@@ -21,11 +21,14 @@ export class MemeController implements IBaseController {
       const take = req.query.take || 100;
       const keyword = req.query.search || '';
 
+      Logger.debug(`Received list meme request with parameters skip: ${skip}, limit: ${take}, search: ${keyword}`);
+
       const result = await this._memeService.searchByText(
         parseInt(skip.toString()),
         parseInt(take.toString()),
         keyword.toString(),
       );
+      Logger.debug('Sending result: %o', result.length);
 
       return new SuccessResponse(result).send(res);
     } catch (error) {

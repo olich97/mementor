@@ -6,12 +6,16 @@ import Logger from './infrastructure/Logger';
 import container from './api/di/DependencyConfiguration';
 import DI_TYPES from './api/di/DependencyTypes';
 import { IBaseController } from './api/controllers/IBaseController';
+import cors from 'cors';
 
 async function startServer() {
   const app = express();
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+
+  // allow cors requests from any origin and with credentials
+  app.use(cors());
 
   // grabs the Controller from IoC container and registers the endpoints
   const controllers: IBaseController[] = container.getAll<IBaseController>(DI_TYPES.ApiController);
