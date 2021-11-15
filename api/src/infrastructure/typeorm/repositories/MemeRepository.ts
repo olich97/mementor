@@ -22,6 +22,9 @@ export class MemeRepository implements IMemeRepository {
       relations: ['content'],
       take: searchOptions.take || 10,
       skip: searchOptions.skip || 0,
+      order: {
+        lastUpdateDate: 'DESC',
+      },
     };
 
     if (searchOptions.where) {
