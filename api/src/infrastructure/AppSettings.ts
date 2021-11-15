@@ -27,4 +27,7 @@ export default {
     url: get('DATABASE_URL').required().asString(),
     mappingsPath: get('DATABASE_MAPPINGS_PATH').asString(),
   },
+  storage: {
+    url: get('STORAGE_URL').required().asString(),
+  },
 };

@@ -1,3 +1,4 @@
+import { Meme } from '../entities/Meme';
 import { IMemeRepository } from '../interfaces/repositories/IMemeRepository';
 import { IMemeService } from '../interfaces/services/IMemeService';
 import { IStorageService } from '../interfaces/services/IStorageService';
@@ -18,38 +19,13 @@ export class MemeService implements IMemeService {
       // TODO: implement ItemNotFound error
       throw new Error('Item not found');
     }
-    //TODO: move to some cast method or mapper function
-    const content = await this._storage.getUrl(meme.content.storageKey);
-    return {
-      id: meme.id,
-      code: meme.code,
-      sourceUrl: meme.sourceUrl,
-      text: meme.text,
-      author: meme.author,
-      isPublic: meme.isPublic,
-      publishDate: meme.publishDate,
-      contentUrl: content,
-      contentType: meme.content.type,
-    };
+    return await this.memeToOutput(meme);
   }
 
   public async list(skip: number = 0, limit: number = 0): Promise<MemeOutput[]> {
     const memes = await this._memes.query({ skip: skip, take: limit });
 
-    //TODO: move to some cast method or mapper function
-    return Promise.all(
-      memes.map(async meme => ({
-        id: meme.id,
-        code: meme.code,
-        sourceUrl: meme.sourceUrl,
-        text: meme.text,
-        author: meme.author,
-        isPublic: meme.isPublic,
-        publishDate: meme.publishDate,
-        contentUrl: await this._storage.getUrl(meme.content.storageKey),
-        contentType: meme.content.type,
-      })),
-    );
+    return await this.memesToOutput(memes);
   }
 
   public async searchByText(skip: number = 0, limit: number = 0, text: string): Promise<MemeOutput[]> {
@@ -59,24 +35,30 @@ export class MemeService implements IMemeService {
       where: { column: 'text', operator: 'like', value: text },
     });
 
-    //TODO: move to some cast method or mapper function
-    return Promise.all(
-      memes.map(async meme => ({
-        id: meme.id,
-        code: meme.code,
-        sourceUrl: meme.sourceUrl,
-        text: meme.text,
-        author: meme.author,
-        isPublic: meme.isPublic,
-        publishDate: meme.publishDate,
-        contentUrl: await this._storage.getUrl(meme.content.storageKey),
-        contentType: meme.content.type,
-      })),
-    );
+    return await this.memesToOutput(memes);
   }
 
   public async create(resource: CreateMemeInput): Promise<MemeOutput> {
     throw new Error('Method not implemented.');
     // https://github.dev/cornflourblue/node-mysql-signup-verification-api
+  }
+
+  private async memesToOutput(memes: Meme[]): Promise<MemeOutput[]> {
+    return Promise.all(memes.map(async meme => this.memeToOutput(meme)));
+  }
+
+  private async memeToOutput(meme: Meme): Promise<MemeOutput> {
+    const contentUrl = await this._storage.getUrl(meme.content.storageKey);
+    return {
+      id: meme.id,
+      code: meme.code,
+      sourceUrl: meme.sourceUrl,
+      text: meme.text,
+      author: meme.author,
+      isPublic: meme.isPublic,
+      publishDate: meme.publishDate,
+      contentUrl: contentUrl,
+      contentType: meme.content.type,
+    };
   }
 }
