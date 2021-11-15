@@ -9,8 +9,6 @@ type LayoutProps = {
   customMeta?: MetaProps;
 };
 
-export const WEBSITE_HOST_URL = 'https://nextjs-typescript-mdx-blog.vercel.app';
-
 const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
   return (
     <>
@@ -29,10 +27,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
       <footer className="py-8">
         <div className="max-w-4xl px-8 mx-auto">
           Built by{' '}
-          <a
-            className="text-gray-900 dark:text-white"
-            href="https://github.com/olich97"
-          >
+          <a className="text-gray-900 dark:text-white" href="https://github.com/olich97">
             Oleh Andrushko
           </a>
         </div>

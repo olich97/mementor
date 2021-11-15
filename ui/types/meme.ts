@@ -4,5 +4,5 @@ export type MemeType = {
   text: string;
   contentUrl: string;
   author?: string;
-  publishDate?: string;
+  publishDate?: Date;
 };

@@ -1,48 +1,40 @@
-import { format, parseISO } from 'date-fns';
-import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
+import { format } from 'date-fns';
 import React from 'react';
-import Layout, { WEBSITE_HOST_URL } from '../../components/Layout';
+import Layout from '../../components/Layout';
+import Loader from '../../components/Loader';
+import { getMemeByCode } from '../../lib/swrMemeService';
 import { MetaProps } from '../../types/layout';
-import { PostType } from '../../types/post';
-// Custom components/renderers to pass to MDX.
-// Since the MDX files aren't loaded by webpack, they have no knowledge of how
-// to handle import statements. Instead, you must include components in scope
-// here.
-const components = {
-  Head,
-  Image,
-  Link,
-};
 
-type PostPageProps = {
-  source: MDXRemoteSerializeResult;
-  frontMatter: PostType;
-};
+export function getServerSideProps(context: any) {
+  return {
+    props: { params: context.params },
+  };
+}
 
-const MemePage = ({ source, frontMatter }: PostPageProps): JSX.Element => {
+const MemePage = ({ params }): JSX.Element => {
+  const { code } = params;
+  const { meme, isLoading, isError } = getMemeByCode(code.toString());
+
   const customMeta: MetaProps = {
-    title: `${frontMatter.title} - Mementor`,
-    description: frontMatter.description,
-    image: `${WEBSITE_HOST_URL}${frontMatter.image}`,
-    date: frontMatter.date,
+    title: `${meme?.text} - Mementor`,
+    description: meme?.text,
+    image: meme?.contentUrl,
+    date: meme?.publishDate,
     type: 'article',
   };
   return (
     <Layout customMeta={customMeta}>
-      <article>
-        <h1 className="mb-3 text-gray-900 dark:text-white">
-          {frontMatter.title}
-        </h1>
-        <p className="mb-10 text-sm text-gray-500 dark:text-gray-400">
-          {format(parseISO(frontMatter.date), 'MMMM dd, yyyy')}
-        </p>
-        <div className="prose dark:prose-dark">
-          <MDXRemote {...source} components={components} />
-        </div>
-      </article>
+      {isLoading && <Loader />}
+      {isError && <div>failed to load</div>}
+      {meme && (
+        <article>
+          <h1 className="mb-3 text-gray-900 dark:text-white">{meme.text}</h1>
+          <p className="mb-10 text-sm text-gray-500 dark:text-gray-400">
+            {meme.publishDate && format(meme.publishDate, 'MMMM dd, yyyy')}
+          </p>
+          <img src={meme.contentUrl} alt={meme.code} className="w-full" />
+        </article>
+      )}
     </Layout>
   );
 };
