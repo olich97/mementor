@@ -1,41 +1,15 @@
 import React, { useState } from 'react';
-import useSWR from 'swr';
+import { getMemes } from '../lib/swrMemeService';
+import useDebounce from '../lib/hooks/useDebounce';
+import Loader from './Loader';
 import MemeCard from './MemeCard';
-
-const fetcher = async (url) => {
-  //https://swr.vercel.app/docs/error-handling
-  const response = await (await fetch(url)).json();
-
-  // If the status code is not in the range 200-299,
-  // we still try to parse and throw it.
-  if (!response.isSuccess) {
-    throw new Error(
-      `An error occurred while fetching the data: ${response.errors}`
-    );
-  }
-
-  return response.data;
-};
-
-function useMemes(limit, skip, search) {
-  const searchQuery = search !== '' ? `search=${search}` : '';
-  const { data, error } = useSWR(
-    `http://localhost:3500/memes?take=${limit}&skip=${skip}&${searchQuery}`,
-    fetcher
-  );
-
-  return {
-    memes: data,
-    isLoading: !error && !data,
-    isError: error,
-  };
-}
 
 const MemeList = (): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [limit, setLimit] = useState(6);
   const [skip, setSkip] = useState(0);
   const [search, setSearch] = useState('');
+  const debouncedValue = useDebounce(search, 1500);
 
   const nextPage = () => {
     setSkip(skip + limit);
@@ -45,11 +19,11 @@ const MemeList = (): JSX.Element => {
     if (skip > 0) setSkip(skip - limit);
   };
 
-  //console.log(`search: ${search}, skip: ${skip}, limit: ${limit}`);
-  const { memes, isLoading, isError } = useMemes(limit, skip, search);
+  //console.log(`search: ${debouncedValue}, skip: ${skip}, limit: ${limit}`);
+  const { memes, isLoading, isError } = getMemes(limit, skip, debouncedValue);
 
   if (isError) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading) return <Loader />;
 
   return (
     <div>
@@ -75,12 +49,12 @@ const MemeList = (): JSX.Element => {
           autoFocus
           placeholder="Search memes .... "
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           className="w-full py-2 border-b-2 outline-none text-black focus:border-black dark:focus:border-white dark:bg-black dark:text-white"
         />
       </div>
       <div className="space-y-4 divide-y md:divide-y-4">
-        {memes?.map((meme) => (
+        {memes?.map(meme => (
           <MemeCard key={meme.id} meme={meme} />
         ))}
       </div>
