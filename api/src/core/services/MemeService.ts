@@ -12,6 +12,27 @@ export class MemeService implements IMemeService {
     this._storage = storageService;
   }
 
+  public async getByCode(code: string): Promise<MemeOutput> {
+    const meme = await this._memes.getByCode(code);
+    if (!meme) {
+      // TODO: implement ItemNotFound error
+      throw new Error('Item not found');
+    }
+    //TODO: move to some cast method or mapper function
+    const content = await this._storage.getUrl(meme.content.storageKey);
+    return {
+      id: meme.id,
+      code: meme.code,
+      sourceUrl: meme.sourceUrl,
+      text: meme.text,
+      author: meme.author,
+      isPublic: meme.isPublic,
+      publishDate: meme.publishDate,
+      contentUrl: content,
+      contentType: meme.content.type,
+    };
+  }
+
   public async list(skip: number = 0, limit: number = 0): Promise<MemeOutput[]> {
     const memes = await this._memes.query({ skip: skip, take: limit });
 
