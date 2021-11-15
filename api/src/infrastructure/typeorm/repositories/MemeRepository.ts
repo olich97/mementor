@@ -14,7 +14,7 @@ export class MemeRepository implements IMemeRepository {
 
   async getByCode(code: string): Promise<Meme> {
     const memes = await this.getCurrentRepository();
-    return await memes.findOne({ code: code });
+    return await memes.findOne({ code: code }, { relations: ['content'] });
   }
 
   async query(searchOptions: any): Promise<Meme[]> {

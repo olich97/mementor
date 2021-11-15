@@ -13,6 +13,7 @@ export class MemeController implements IBaseController {
 
   register(app: Application): void {
     app.route('/memes').get(async (req, res) => await this.list(req, res));
+    app.route('/memes/:code').get(async (req, res) => await this.getByCode(req, res));
   }
 
   async list(req: Request, res: Response) {
@@ -29,6 +30,22 @@ export class MemeController implements IBaseController {
         keyword.toString(),
       );
       Logger.debug('Sending result: %o', result.length);
+
+      return new SuccessResponse(result).send(res);
+    } catch (error) {
+      Logger.error(error);
+      return new InternalErrorResponse(error.message).send(res);
+    }
+  }
+
+  async getByCode(req: Request, res: Response) {
+    try {
+      const code = req.params.code || '';
+
+      Logger.debug(`Received meme request with parameters code: ${code}`);
+
+      const result = await this._memeService.getByCode(code);
+      Logger.debug('Sending result: %o', result);
 
       return new SuccessResponse(result).send(res);
     } catch (error) {
