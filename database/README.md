@@ -2,7 +2,7 @@
 
 To build the Postgresql container and start up a database, run:
 ```bash
-docker-compose -f docker-compose-postgres.yml up
+docker-compose -f docker-compose-postgresql.yml up
 ```
 
 ## Creating database schema
