@@ -18,41 +18,58 @@ async function getProviderLoginUrl(): Promise<any> {
 }
 
 async function loginWithGithub(code: string): Promise<any> {
-  const res = await fetch(`${config.OAUTH_ENDPOINT}/github`, {
-    method: 'POST',
-    credentials: 'include',
-    redirect: 'follow',
-    mode: 'cors',
-    headers: {
-      'git-hub-code': code,
-    },
-  });
+  try {
+    const res = await fetch(`${config.OAUTH_ENDPOINT}/github`, {
+      method: 'POST',
+      credentials: 'include',
+      redirect: 'follow',
+      mode: 'cors',
+      headers: {
+        'git-hub-code': code,
+      },
+    });
 
-  const response = await res.json();
-  if (response.data) {
-    localStorage.setItem('user', JSON.stringify(response.data));
+    const response = await res.json();
+    if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+    }
+    return {
+      isError: !response.isSuccess,
+      errorMessage: !response.isSuccess ? response.errors : null,
+      user: response.isSuccess ? response.data : null,
+    };
+  } catch (error) {
+    return {
+      isError: true,
+      errorMessage: error.message,
+    };
   }
-  return {
-    isError: !response.isSuccess,
-    errorMessage: !response.isSuccess ? response.errors : null,
-    user: response.isSuccess ? response.data : null,
-  };
 }
 
 async function logOut(): Promise<any> {
-  const res = await fetch(`${config.OAUTH_ENDPOINT}/github/logout`, {
-    method: 'POST',
-    credentials: 'include',
-    redirect: 'follow',
-    mode: 'cors',
-  });
+  const userToken = JSON.parse(localStorage.getItem('user')).token;
 
-  const response = await res.json();
-  if (response.data) {
-    localStorage.removeItem('user');
+  try {
+    const res = await fetch(`${config.OAUTH_ENDPOINT}/github/logout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    const response = await res.json();
+    if (response.data) {
+      localStorage.removeItem('user');
+    }
+
+    return {
+      isError: !response.isSuccess,
+      errorMessage: !response.isSuccess ? response.errors : null,
+    };
+  } catch (error) {
+    return {
+      isError: true,
+      errorMessage: error.message,
+    };
   }
-  return {
-    isError: !response.isSuccess,
-    errorMessage: !response.isSuccess ? response.errors : null,
-  };
 }
