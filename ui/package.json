@@ -28,6 +28,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@tailwindcss/typography": "^0.4.1",
+    "@tailwindui/react": "^0.1.1",
     "date-fns": "^2.19.0",
     "dotenv": "^10.0.0",
     "gray-matter": "^4.0.2",
