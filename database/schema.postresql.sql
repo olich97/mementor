@@ -1,6 +1,21 @@
 drop table if exists meme;
+drop table if exists "user";
 drop table if exists content;
 drop table if exists scrap_error;
+
+-- Table for users: external logins only
+CREATE TABLE "user" 
+(
+    user_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    provider VARCHAR(20) NOT NULL,
+    provider_user_id VARCHAR(255) NOT NULL,  
+    photo_profile_url VARCHAR(255) NULL,
+    token TEXT NULL,
+    token_expiration_date TIMESTAMP with time zone NULL,
+    last_login_date TIMESTAMP with time zone NULL,
+    last_update_date TIMESTAMP with time zone default current_timestamp NOT NULL
+);
 
 -- Table for storing contents associated with meme
 CREATE TABLE content 
