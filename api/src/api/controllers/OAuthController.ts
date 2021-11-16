@@ -36,7 +36,7 @@ export class OAuthController implements IBaseController {
     try {
       const sessionCode = req.headers['git-hub-code'] || '';
 
-      Logger.debug(`Received login requesr with parameters code: ${sessionCode}`);
+      Logger.debug(`Received login requesr with parameters code: ${sessionCode}; ${req.headers['origin']}`);
 
       const result = await this._oAuthService.logIn(sessionCode.toString());
 
@@ -44,7 +44,6 @@ export class OAuthController implements IBaseController {
       res.cookie('github-jwt', result.token, {
         httpOnly: true,
         domain: req.headers['origin'],
-        sameSite: 'strict',
       });
 
       return new SuccessResponse(result).send(res);
@@ -56,15 +55,16 @@ export class OAuthController implements IBaseController {
 
   async logout(req: Request, res: Response) {
     try {
-      const token = req.cookies['github-jwt'] || '';
+      Logger.debug('%o', req.headers);
+      const token = req.headers['authorization'] || '';
 
       Logger.debug(`Received login requesr with parameters token: ${token}`);
 
-      const result = await this._oAuthService.logOut(token.toString());
+      await this._oAuthService.logOut(token.toString().split(' ')[1]);
 
-      Logger.debug('Sending result: %o', result);
+      Logger.debug('Sending result');
 
-      return new SuccessResponse(result).send(res);
+      return new SuccessResponse('User logged out').send(res);
     } catch (error) {
       Logger.error(error);
       return new InternalErrorResponse(error.message).send(res);
