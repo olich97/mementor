@@ -59,7 +59,7 @@ export class BadRequestResponse extends ApiResponse {
 }
 
 export class SuccessResponse extends ApiResponse {
-  constructor(data: object) {
+  constructor(data: any) {
     super(ResponseStatus.SUCCESS, true, undefined, data, undefined);
   }
 }

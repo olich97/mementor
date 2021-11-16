@@ -16,7 +16,7 @@ async function startServer() {
   app.use(express.json());
 
   // allow cors requests
-  app.use(cors({ origin: config.cors.origins }));
+  app.use(cors({ origin: config.cors.origins, credentials: true }));
   // adding Helmet to our API's security
   // https://helmetjs.github.io/
   app.use(helmet());

@@ -8,7 +8,9 @@
 
 interface DI_TYPES {
   MemeRepository: symbol;
+  UserRepository: symbol;
   MemeService: symbol;
+  OAuthService: symbol;
   StorageService: symbol;
   DatabaseService: symbol;
   ConnectionOptions: symbol;
@@ -17,6 +19,8 @@ interface DI_TYPES {
 
 const DI_TYPES: DI_TYPES = {
   MemeRepository: Symbol('MemeRepository'),
+  UserRepository: Symbol('UserRepository'),
+  OAuthService: Symbol('OAuthService'),
   MemeService: Symbol('MemeService'),
   DatabaseService: Symbol('DatabaseService'),
   StorageService: Symbol('StorageService'),
