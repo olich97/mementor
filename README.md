@@ -5,6 +5,7 @@
 - [ ] Automate database migration/creation
 - [ ] Docker scripts
 - [ ] CI/CD workflows
+- [ ] Switch to Amazon AWS for image storage
 - [ ] Add Upload meme feature (visible only for authorized GitHub users)
 - [ ] Add User favorites meme feature (private saved on database for each logged user and public on browser local storage)
 - [ ] Distinct public memes from private ones (visible only for authorized GitHub users)
