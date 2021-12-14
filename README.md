@@ -25,3 +25,19 @@ Messages types:
 - `fix({project}): {message}` => for bugfixes
 - `chore({project}): {message}` => for no production code changes
 - `docs({project}): {message}` => for docs or README updates
+
+
+# TODO
+- [ ] Fix/Improve pagination UI
+- [ ] Tests UI & API
+- [ ] Automate database migration/creation
+- [ ] Docker scripts
+- [ ] CI/CD workflows
+- [ ] Add share button
+- [ ] Write About page
+- [ ] Switch to Amazon AWS for image storage
+- [ ] Add Upload meme feature (visible only for authorized GitHub users)
+- [ ] Add User favorites meme feature (private saved on database for each logged user and public on browser local storage)
+- [ ] Distinct public memes from private ones (visible only for authorized GitHub users)
+- [ ] Add voting (likes) meme feature with auto-publishing meme
+- [ ] Improve search by text performance
