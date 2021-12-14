@@ -1,0 +1,20 @@
+PORT = 3500
+LOG_LEVEL = 'error'
+
+DATABASE_URL = postgres://username:password@localhost:5432/databasename
+DATABASE_MAPPINGS_PATH = './src/infrastructure/typeorm/mappings/*'
+
+STORAGE_URL = 'https://storage.com'
+
+CORS_ORIGINS = 'http://localhost:3000'
+
+# GITHUB Configuration
+GITHUB_CLIENT_ID = 'git-hub-client-id'
+GITHUB_CLIENT_SECRET = 'git-hub-secret'
+GITHUB_API_PREFIX = 'https://api.github.com'
+GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token'
+GITHUB_CALLBACK_URL = 'http://localhost:3000/oauth/github/callback'
+
+# JWT
+JWT_SECRET = 'jwt-secret'
+JWT_TOKEN_DURATION_HOURS = 24
