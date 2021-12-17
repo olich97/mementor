@@ -24,12 +24,6 @@ export class Meme {
     @Column({ type: 'timestamp', name: 'publish_date' })
     publishDate?: Date;
 
-    @Column({ type: 'int', name: 'likes_count' })
-    likes: number;
-
-    @Column({ type: 'int', name: 'dislikes_count' })
-    dislikes: number;
-
     @OneToOne(() => Content, { cascade: true })
     @JoinColumn({ name: 'content_id' })
     content: Content;
@@ -41,14 +35,11 @@ export class Meme {
         memeText: string,
         memeSourceUrl: string,
         memeContentType: ContentType,
-        contentSourceUrl: string,
-        contentHash: string
+        contentSourceUrl: string
     ): Meme {
         const memeContent: Content = new Content();
         memeContent.type = memeContentType;
         memeContent.sourceUrl = contentSourceUrl;
-        memeContent.hash = contentHash;
-
         const meme = new Meme();
         meme.text = memeText;
         meme.content = memeContent;

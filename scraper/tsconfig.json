@@ -2,6 +2,7 @@
     "compilerOptions": {
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
+      "allowSyntheticDefaultImports": true,
       /* Visit https://aka.ms/tsconfig.json to read more about this file */
       "target": "esnext",
       "lib": ["esnext", "es6"],
@@ -10,7 +11,9 @@
       "noEmit": true,
       "esModuleInterop": true,
       "moduleResolution": "node",
+      "skipLibCheck": true
     },
+    "exclude": ["node_modules", "dist", "tests"],
     "include": ["./src/**/*"]
   }
   
