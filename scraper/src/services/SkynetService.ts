@@ -1,12 +1,8 @@
 import { SkynetClient } from '@skynetlabs/skynet-nodejs';
 import { FileHelper } from '../utils/FileHelper';
 import fs from 'fs';
-
-export interface ISkynetService {
-    uploadFile(targetUrl: string, fileName: string): Promise<string>;
-}
-
-export class SkynetService implements ISkynetService {
+import { IStorageService } from './IStorageService';
+export class SkynetService implements IStorageService {
     private _authToken: string;
     private _localFileRepoPath: string;
     private _skynetPortal: string;

@@ -24,9 +24,6 @@ export class Content {
     @Column({ type: 'varchar', name: 'storage_key', length: 64 })
     storageKey: string;
 
-    @Column({ type: 'varchar', name: 'hash', length: 64 })
-    hash: string;
-
     @Column({ name: 'last_update_date', type: 'timestamp' })
     lastUpdateDate?: Date;
 }

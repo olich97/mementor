@@ -5,9 +5,11 @@ import { ScrapConfiguration } from './model/ScrapConfiguration';
 import { IScraper, Scraper } from './services/Scrapper';
 import { createConnection, Repository } from 'typeorm';
 import { ScrapError } from './model/ScrapError';
-import { ISkynetService, SkynetService } from './services/SkynetService';
+import { SkynetService } from './services/SkynetService';
 import { Content } from './model/Content';
 import { UploadError } from './model/UploadError';
+import { IStorageService } from './services/IStorageService';
+import { ImagekitService } from './services/ImagekitService';
 
 const scrapConfig: ScrapConfiguration = new ScrapConfiguration(
     process.env.SCRAP_TARGET_ELEMENT_PATTERN,
@@ -18,10 +20,17 @@ const scrapConfig: ScrapConfiguration = new ScrapConfiguration(
 );
 
 const scraper: IScraper = new Scraper(scrapConfig);
-const skynet: ISkynetService = new SkynetService(
+const skynet: IStorageService = new SkynetService(
     process.env.SKY_AUTH_TOKEN,
-    process.env.SKY_LOCAL_FILE_REPO,
+    process.env.STORAGE_LOCAL_FILE_REPO,
     process.env.SKY_PORTAL_URL
+);
+
+const imageKit: IStorageService = new ImagekitService(
+    process.env.IMAGEKIT_PUBLIC_KEY,
+    process.env.IMAGEKIT_PRIVATE_KEY,
+    process.env.STORAGE_LOCAL_FILE_REPO,
+    process.env.IMAGEKIT_ENDPOINT_URL
 );
 
 let errorRepository: Repository<ScrapError>;
@@ -58,7 +67,7 @@ async function elaboratePage(url: string) {
                     relations: ['content'],
                     where: {
                         content: {
-                            hash: newMeme.content.hash
+                            storageKey: newMeme.content.storageKey
                         }
                     }
                 });
@@ -86,9 +95,9 @@ async function uploadFiles() {
         try {
             console.log(`Start uploading content: ${content.sourceUrl}`);
             const fileName = content.sourceUrl.substring(content.sourceUrl.lastIndexOf('/') + 1);
-            const skyKey = await skynet.uploadFile(content.sourceUrl, fileName);
-            console.log(`Upload successful, skylink: ${skyKey}`);
-            content.storageKey = skyKey;
+            const key = await imageKit.uploadFile(content.sourceUrl, fileName);
+            console.log(`Upload successful, skylink: ${key}`);
+            content.storageKey = key;
             contentRepository.save(content);
         } catch (error) {
             uploadErrorRepository.save(UploadError.Create(content.sourceUrl, <string>error));

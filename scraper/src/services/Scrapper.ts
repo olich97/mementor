@@ -56,12 +56,7 @@ export class Scraper implements IScraper {
                     );
                     return;
                 }
-                // get hash of content file
-                const fileBuffer = await HttpRequestHelper.getBufferFromUrl(sourceUrl);
-                const hashSum = crypto.createHash('sha256');
-                hashSum.update(fileBuffer);
-                const contentHash = hashSum.digest('hex');
-                const meme = Meme.Create(text, sourceUrl, contentType, contentUrl, contentHash);
+                const meme = Meme.Create(text, sourceUrl, contentType, contentUrl);
 
                 memes.push(meme);
             } catch (error) {
